@@ -30,5 +30,6 @@ JOIN dim_fingerprint_source dfs ON daos.fingerprint_source_id = dfs.fingerprint_
 JOIN dim_vulnerability_solution dvs ON dv.vulnerability_id = dvs.solution_id
 JOIN dim_solution ds ON dvs.solution_id = ds.solution_id
 JOIN dim_vulnerability_category dvc ON dv.vulnerability_id = dvc.vulnerability_id
-JOIN dim_tag dt ON da.asset_id = dt.asset_id
+JOIN dim_asset_tag dat ON da.asset_id = dat.asset_id
+JOIN dim_tag dt ON dat.tag_id = dt.tag_id
 WHERE dv.cvss_score >= 7
