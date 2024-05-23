@@ -27,7 +27,8 @@ SELECT
     fava.first_discovered AS "First Found Date",
     favi.date AS "Vulnerability Test Date",
     dv.nexpose_id AS "Vulnerability ID",    
-    
+
+    -- TO BE DELETED? 
     -- dos.asset_type AS "Asset Type",
     -- daos.certainty AS "Operating System Certainty",
     -- fava.most_recently_discovered AS "Last Found Date",
