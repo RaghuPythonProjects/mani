@@ -2,7 +2,10 @@ SELECT
     DISTINCT da.asset_id AS "Asset ID",
     da.ip_address AS "Asset IP Address",
     da.host_name AS "Asset Name",
+    da.mac_address AS "Asset MAC Addresses",
     dt.tag_name AS "Asset Location",
+    daua.full_name AS "Asset Owner",
+    'TBD' AS "Asset Criticality",
     dv.title AS "Vulnerability Title",
     dvr.reference AS "CVE ID",
     dv.cvss_score AS "CVSS Score",
@@ -20,6 +23,7 @@ SELECT
     dvc.category_id AS "Vulnerability Category ID",
     dv.nexpose_id AS "Vulnerability ID"
 FROM dim_asset da
+JOIN dim_asset_user_account daua ON da.asset_id = daua.asset_id
 JOIN fact_asset_scan_vulnerability_instance fasvi ON da.asset_id = fasvi.asset_id
 JOIN fact_asset_vulnerability_age fava ON fasvi.vulnerability_id = fava.vulnerability_id
 JOIN dim_vulnerability dv ON fasvi.vulnerability_id = dv.vulnerability_id
