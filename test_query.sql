@@ -5,8 +5,8 @@ SELECT
     da.mac_address AS "Asset MAC Addresses",
     dt.tag_name AS "Asset Location",
     daua.full_name AS "Asset Owner",
-    ----- 'TBD' AS "Asset Criticality",
-    ----- 'TBD' AS "Custom Tag",
+    -- 'TBD' AS "Asset Criticality",
+    -- 'TBD' AS "Custom Tag",
     dv.title AS "Vulnerability Title",
     dvr.reference AS "CVE ID",
     dv.cvss_score AS "CVSS Score",
@@ -25,13 +25,13 @@ SELECT
     fava.age_in_days AS "Vulnerability Age",
     fava.first_discovered AS "First Found Date",
     favi.date AS "Vulnerability Test Date",
-    dv.nexpose_id AS "Vulnerability ID",
+    dv.nexpose_id AS "Vulnerability ID",    
     
-    dos.asset_type AS "Asset Type",
-    daos.certainty AS "Operating System Certainty",
-    fava.most_recently_discovered AS "Last Found Date",
-    dvc.category_name AS "Vulnerability Category",
-    dvc.category_id AS "Vulnerability Category ID"
+    -- dos.asset_type AS "Asset Type",
+    -- daos.certainty AS "Operating System Certainty",
+    -- fava.most_recently_discovered AS "Last Found Date",
+    -- dvc.category_name AS "Vulnerability Category",
+    -- dvc.category_id AS "Vulnerability Category ID"
 FROM dim_asset da
 LEFT JOIN fact_asset fa ON da.asset_id = fa.asset_id
 LEFT JOIN dim_asset_service_configuration dasc ON da.asset_id = dasc.asset_id
