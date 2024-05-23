@@ -9,6 +9,7 @@ SELECT
     -- 'TBD' AS "Custom Tag",
     dv.title AS "Vulnerability Title",
     dvr.reference AS "CVE ID",
+    dv.nexpose_id AS "CVE ID 2", -- added to check which is correct
     dv.cvss_score AS "CVSS Score",
     dv.riskscore AS "Vulnerability Risk Score",
     fa.riskscore AS "Asset Risk Score",
@@ -40,6 +41,7 @@ LEFT JOIN dim_protocol dp ON dascr.protocol_id = dp.protocol_id
 LEFT JOIN dim_asset_user_account daua ON da.asset_id = daua.asset_id
 LEFT JOIN fact_asset_scan_vulnerability_instance fasvi ON da.asset_id = fasvi.asset_id
 LEFT JOIN fact_asset_vulnerability_age fava ON fasvi.vulnerability_id = fava.vulnerability_id
+LEFT JOIN no_solutions ns ON ns.vulnerability_id = fava.vulnerability_id
 LEFT JOIN dim_vulnerability dv ON fasvi.vulnerability_id = dv.vulnerability_id
 LEFT JOIN dim_vulnerability_reference dvr ON fasvi.vulnerability_id = dvr.vulnerability_id
 LEFT JOIN fact_asset_vulnerability_instance favi ON fasvi.vulnerability_id = favi.vulnerability_id
