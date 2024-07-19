@@ -1,0 +1,260 @@
+query ReportsTable($filterBy: ReportFilters, $first: Int, $after: String) {
+  reports(first: $first, after: $after, filterBy: $filterBy) {
+    nodes {
+      id
+      name
+      createdAt
+      createdBy {
+        id
+        email
+      }
+      type {
+        id
+        name
+      }
+      project {
+        id
+        name
+      }
+      emailTarget {
+        to
+      }
+      params {
+        ...ReportParams
+      }
+      lastRun {
+        ...LastRunDetails
+      }
+      nextRunAt
+      runIntervalHours
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+fragment ReportParams on ReportParams {
+  ... on ReportParamsCloudResource {
+    entityType
+    subscriptionId
+  }
+  ... on ReportParamsComplianceAssessments {
+    frameworks {
+      ...ReportParamsFramework
+    }
+    subscriptions {
+      ...ReportParamsEntity
+    }
+  }
+  ... on ReportParamsComplianceExecutiveSummary {
+    framework {
+      ...ReportParamsFramework
+    }
+    subscriptions {
+      ...ReportParamsEntity
+    }
+  }
+  ... on ReportParamsConfigurationFindings {
+    subscriptions {
+      ...ReportParamsEntity
+    }
+    entities {
+      ...ReportParamsEntity
+    }
+    entitiesCount
+  }
+  ... on ReportParamsGraphQuery {
+    query
+  }
+  ... on ReportParamsHostConfiguration {
+    hostConfigurationRuleAssessmentsFilters
+  }
+  ... on ReportParamsIssue {
+    issueFilters
+  }
+  ... on ReportParamsNetworkExposure {
+    __typename
+    entities {
+      ...ReportParamsEntity
+    }
+    subscriptions {
+      ...ReportParamsEntity
+    }
+    entitiesCount
+  }
+  ... on ReportParamsSecurityFramework {
+    entities {
+      ...ReportParamsEntity
+    }
+    subscriptions {
+      ...ReportParamsEntity
+    }
+    entitiesCount
+  }
+  ... on ReportParamsDataScan {
+    filters
+  }
+  ... on ReportParamsCloudEntitlements {
+    filters
+  }
+  ... on ReportParamsVulnerabilities {
+    type
+    filters
+    entities {
+      ...ReportParamsEntity
+    }
+    entitiesCount
+  }
+  ... on ReportParamsSBOM {
+    entitiesCount
+    resourceFilters {
+      cloudPlatform
+      entityIds
+      name {
+        contains
+        doesNotContain
+        doesNotEndWith
+        doesNotStartWith
+        endsWith
+        equals
+        notEquals
+        startsWith
+      }
+      type
+      tags {
+        key
+        value
+      }
+      subscriptionIds
+      status
+      nativeType
+    }
+  }
+  ... on ReportParamsSBOMArtifactSearch {
+    entitiesCount
+    filters
+  }
+  ... on ReportParamsRuntimeExecutionData {
+    kubernetesClusters {
+      ...ReportParamsEntity
+    }
+    entities {
+      ...ReportParamsEntity
+    }
+    subscriptions {
+      ...ReportParamsEntity
+    }
+    name {
+      contains
+      doesNotContain
+      doesNotEndWith
+      doesNotStartWith
+      endsWith
+      equals
+      notEquals
+      startsWith
+    }
+    tags {
+      key
+      value
+    }
+  }
+  ... on ReportParamsEndpointAttackSurface {
+    filters
+  }
+}
+
+fragment ReportParamsFramework on SecurityFramework {
+  id
+  name
+}
+
+fragment ReportParamsEntity on GraphEntity {
+  id
+  type
+  name
+  properties
+  technologies {
+    id
+    name
+    icon
+  }
+}
+
+fragment LastRunDetails on ReportRun {
+  id
+  status
+  failedReason
+  runAt
+  progress
+  results {
+    ... on ReportRunResultsBenchmark {
+      errorCount
+      passedCount
+      failedCount
+      scannedCount
+    }
+    ... on ReportRunResultsHostConfiguration {
+      errorCount
+      passedCount
+      failedCount
+      ignoredCount
+    }
+    ... on ReportRunResultsGraphQuery {
+      resultCount
+      entityCount
+    }
+    ... on ReportRunResultsNetworkExposure {
+      scannedCount
+      publiclyAccessibleCount
+    }
+    ... on ReportRunResultsConfigurationFindings {
+      findingsCount
+    }
+    ... on ReportRunResultsVulnerabilities {
+      count
+    }
+    ... on ReportRunResultsIssues {
+      count
+    }
+    ... on ReportRunResultsCloudResource {
+      count
+      limitReached
+    }
+    ... on ReportRunResultsDataScan {
+      count
+    }
+    ... on ReportRunResultsCloudEntitlements {
+      count
+      identitiesCount
+      resourcesCount
+    }
+    ... on ReportRunResultsSystemActivity {
+      count
+    }
+    ... on ReportRunResultsSBOM {
+      count
+      failedCount
+    }
+    ... on ReportRunResultsSBOMArtifactSearch {
+      count
+    }
+    ... on ReportRunResultsAuditLog {
+      count
+    }
+    ... on ReportRunResultsRuntimeExecutionData {
+      count
+    }
+    ... on ReportRunResultsCloudEntitlements {
+      count
+      identitiesCount
+      resourcesCount
+    }
+    ... on ReportRunResultsEndpointAttackSurface {
+      count
+    }
+  }
+}
