@@ -1,4 +1,5 @@
 import requests
+import numpy as np
 import pandas as pd
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -38,7 +39,7 @@ class OtisDataAPI:
 
         for parent_key in self.nested_keys.keys():
             self.df[f"{parent_key}_link"] = self.df[parent_key].map(
-                lambda x: x['link'] if isinstance(x, dict) and 'link' in x else None
+                lambda x: x['link'] if isinstance(x, dict) and 'link' in x else np.nan
             )
 
         for parent_key, child_keys in self.nested_keys.items():
@@ -83,9 +84,9 @@ class OtisDataAPI:
 
                 self.df.drop(columns=columns_to_drop, inplace=True)
 
-            link_columns_to_drop = [f"{key}_link" for key in self.nested_keys.keys() if
-                                    f"{key}_link" in self.df.columns]
-            self.df.drop(columns=link_columns_to_drop, inplace=True)
+        link_columns_to_drop = [f"{key}_link" for key in self.nested_keys.keys() if
+                                f"{key}_link" in self.df.columns]
+        self.df.drop(columns=link_columns_to_drop, inplace=True)
 
 
     def filter_columns(self):
