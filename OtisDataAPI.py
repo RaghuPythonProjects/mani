@@ -70,23 +70,13 @@ class OtisDataAPI:
             if not temp_df.empty:
                 self.df = self.df.merge(temp_df, left_on=f"{parent_key}_link",
                                         right_on='link', how='left', suffixes=('', '_fetched'))
-
-                for key in child_keys:
-                    fetched_col = f"{parent_key}.{key}" if key != 'name' else parent_key
-                    self.df[fetched_col] = self.df[fetched_col].combine_first(self.df[f"{fetched_col}_fetched"])
-
-                columns_to_drop = [
-                                      f"{parent_key}.{key}_fetched" if key != 'name' else f"{parent_key}_fetched"
-                                      for key in child_keys
-                                      if
-                                      f"{parent_key}.{key}_fetched" in self.df.columns or f"{parent_key}_fetched" in self.df.columns
-                                  ] + ['link']
-
+                columns_to_drop = [f"{parent_key}.{key}_fetched" if key != 'name' else f"{parent_key}_fetched" for key in child_keys] + ['link']
+                columns_to_drop = [col for col in columns_to_drop if col in self.df.columns ]
                 self.df.drop(columns=columns_to_drop, inplace=True)
-
-        link_columns_to_drop = [f"{key}_link" for key in self.nested_keys.keys() if
-                                f"{key}_link" in self.df.columns]
-        self.df.drop(columns=link_columns_to_drop, inplace=True)
+                
+        columns_to_drop = [f"{key}_link" for key in self.nested_keys.keys()]
+        columns_to_drop = [col for col in columns_to_drop if col in self.df.columns]
+        self.df.drop(columns=columns_to_drop, inplace=True)
 
 
     def filter_columns(self):
