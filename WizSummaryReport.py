@@ -20,7 +20,7 @@ class WizSummaryReport:
         # Update below mapping
         # sheet name : [list of metrics]
         self.metric_grouping = {
-            'HIS': ['DataLake', 'OtisOne, 'NE CRM'],
+            'HIS': ['DataLake', 'OtisOne', 'NE CRM'],
             'Stand': ['ABC', 'XFZ', '1G3']
         }
 
