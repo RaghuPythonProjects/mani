@@ -17,9 +17,11 @@ class WizSummaryReport:
             'Unique Exploitable assets older than 45 days': 0,
             'Unique CISA KEV assets older than 45 days': 0,
         }
+        # Update below mapping
+        # sheet name : [list of metrics]
         self.metric_grouping = {
-            'A1': ['ABC', 'XYZ', '123'],
-            'A2': ['ABD', 'XFZ', '1G3']
+            'HIS': ['DataLake', 'OtisOne, 'NE CRM'],
+            'Stand': ['ABC', 'XFZ', '1G3']
         }
 
     def extract_metrics(self):
@@ -114,6 +116,7 @@ class WizSummaryReport:
         logger.info("Running WizSummaryReport - END")
 
 
+# update folder path to excel files
 input_folder_path = 'input'
 output_file_path = "output/metrics_summary.xlsx"
 wiz_summary = WizSummaryReport(input_folder_path, output_file_path)
