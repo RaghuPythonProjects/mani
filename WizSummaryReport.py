@@ -24,37 +24,50 @@ class WizSummaryReport:
             'Stand': ['ABC', 'XFZ', '1G3']
         }
 
+    
     def extract_metrics(self):
         logger.info(f'Starting to extract metrics from folder(s): {self.root_folder}')
         for folder in self.root_folder:
             for subdir, dirs, files in os.walk(folder):
                 for file in files:
-                    if file.endswith(".xlsx"):
+                    if file.endswith(".xlsx") and '_count' in file:
+                        category = file.split('_count')[0]
                         file_path = os.path.join(subdir, file)
-                        logger.info(f'Processing file: {file_path}')
+                        logger.info(f'Category: {category}, Processing file: {file_path}')
                         try:
-                            self._process_excel_file(file_path)
+                            self._process_excel_file(file_path, category)
                         except Exception as e:
                             logger.error(f"Error processing file {file_path}: {e}")
 
-    def _process_excel_file(self, file_path):
+    def _process_excel_file(self, file_path, category):
         logger.info(f'Extracting data from file: {file_path}')
         excel_file = pd.ExcelFile(file_path)
+        sheet_name = ''
         if 'count' in excel_file.sheet_names:
-            logger.info(f"'count' sheet found in {file_path}")
-            df = pd.read_excel(file_path, sheet_name='count')
+            sheet_name = 'count'
+        elif 'counts' in excel_file.sheet_names:
+            sheet_name = 'counts'
 
-            category = None
+        if sheet_name != '':
+            logger.info(f"'{sheet_name}' sheet found in {file_path}")
+            df = pd.read_excel(file_path, sheet_name=sheet_name)
+            overall_category = False
             for i, row in df.iterrows():
                 col_a_summary = row['Summary Description']
-                col_b_value = row['Summary']
-                if str(col_a_summary) == 'Category' and pd.notna(col_b_value):
-                    category = col_b_value
-                    logger.info(f"Found category: {category}")
-                    self.metrics[category] = {key: 0 for key in self.row_val_map}
-                elif category and col_a_summary in self.row_val_map and pd.notna(col_b_value):
-                    logger.info(f"Updating {col_a_summary} for category {category} with value {col_b_value}")
-                    self.metrics[category][col_a_summary] = int(float(col_b_value))
+                col_b_value = row['Summary Values']
+                if sheet_name == 'count':
+                    if col_a_summary in self.row_val_map and pd.notna(col_b_value):
+                        logger.info(f"Updating {col_a_summary} for category {category} with value {col_b_value}")
+                        self.metrics[category][col_a_summary] = int(float(col_b_value))
+
+                elif sheet_name == 'counts':
+                    if str(col_a_summary) == 'Category' and str(col_b_value) == 'Overall':
+                        overall_category = True
+                        logger.info(f"Found category: {overall_category}")
+                        self.metrics[category] = {key: 0 for key in self.row_val_map}
+                    elif overall_category and col_a_summary in self.row_val_map and pd.notna(col_b_value):
+                        logger.info(f"Updating {col_a_summary} for category {category} with value {col_b_value}")
+                        self.metrics[category][col_a_summary] = int(float(col_b_value))
         else:
             logger.warning(f"'count' sheet not found in {file_path}")
 
