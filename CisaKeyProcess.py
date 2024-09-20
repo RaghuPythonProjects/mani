@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from CISAKeyDownloader import CISAKeyDownloader
+from utilities.CISAKeyDownloader import CISAKeyDownloader
 
 
 class CisaKeyProcess:
@@ -77,3 +77,4 @@ class CisaKeyProcess:
         self.load_cisa_kev()
         self.update_is_cisa_kev()
         self.update_cisa_kev_column_position()
+        return self.data_df
