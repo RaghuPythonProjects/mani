@@ -17,9 +17,10 @@ class CisaKeyProcess:
         self.cisa_kev_df = cisa_kev_df
         self.cisa_kev_file_path = cisa_kev_file_path
         self.download_cisa_kev = download_cisa_kev
-        self.load_data()
+
 
     def read_file(self, file_path):
+        """load data from given file path"""
         if os.path.exists(file_path):
             if file_path.lower().endswith('.xlsx'):
                 return pd.read_excel(file_path)
@@ -27,11 +28,13 @@ class CisaKeyProcess:
                 return pd.read_csv(file_path)
         return None
 
-    def load_data(self):
+    def load_data_df(self):
+        """load data if file path is given"""
         if not self.data_df and self.data_file_path:
             self.data_df = self.read_file(self.data_file_path)
 
     def load_cisa_kev(self):
+        """load cisa kev data if file path is given"""
         if not self.cisa_kev_df and self.cisa_kev_file_path:
             self.data_df = self.read_file(self.cisa_kev_file_path)
 
@@ -42,13 +45,14 @@ class CisaKeyProcess:
                 self.cisa_kev_df = self.read_file(downloader.cisa_kev_file_path)
 
     def update_is_cisa_kev(self):
+        """update cisa kev in data"""
         if (isinstance(self.data_df, pd.DataFrame) and len(self.data_df) > 0 and
                 isinstance(self.cisa_kev_df, pd.DataFrame) and len(self.cisa_kev_df) > 0):
             pass
         return self.data_df
 
-    # check this function required or not at the end
     def update_cisa_kev_column_position(self):
+        """update column positions"""
         if (isinstance(self.data_df, pd.DataFrame) and len(self.data_df) > 0 and
                 isinstance(self.cisa_kev_df, pd.DataFrame) and len(self.cisa_kev_df) > 0):
             df_columns = self.data_df.columns.tolist()
@@ -68,7 +72,8 @@ class CisaKeyProcess:
         return self.data_df
 
     def run(self):
-        self.load_data()
+        """class orchestrator to run all functions in sequence"""
+        self.load_data_df()
         self.load_cisa_kev()
         self.update_is_cisa_kev()
         self.update_cisa_kev_column_position()
